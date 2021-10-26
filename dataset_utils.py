@@ -15,8 +15,11 @@ def get_data(dataset_name, split, tokenization=False, return_raw_dataset=False):
     Returns the dataset in a tokenized format
     """
     dataset = load_dataset(dataset_name, split=split)
+    if return_raw_dataset:
+        return dataset
+
     if tokenization:
-        all_answers, all_context, all_titles  = [], [], []
+        all_answers, all_context, all_titles = [], [], []
         for idx in range(len(dataset)):
             all_answers.append(dataset[idx]['answers'])
             all_context.append(dataset[idx]['context'])
@@ -32,13 +35,7 @@ def get_data(dataset_name, split, tokenization=False, return_raw_dataset=False):
         for val in tqdm(all_titles, desc="Tokenizing Titles"):
             all_titles_tokenized.append(tokenizer(val))
 
-        return TokenizedComponents(
-            all_answers_tokenized,
-            all_context_tokenized,
-            all_titles_tokenized
-        )
-    if return_raw_dataset:
-        return dataset
+        return TokenizedComponents(all_answers_tokenized, all_context_tokenized, all_titles_tokenized)
 
 ds = get_data("squad", "train", tokenization=True)
 print(ds.tokenized_answers[0])
