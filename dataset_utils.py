@@ -40,5 +40,4 @@ def get_data(dataset_name, split, tokenization=False, return_raw_dataset=False):
     if return_raw_dataset:
         return dataset
 
-ds = get_data("squad", "train", tokenization=True)
-print(ds.tokenized_answers[0])
+
