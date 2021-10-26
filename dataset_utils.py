@@ -37,5 +37,4 @@ def get_data(dataset_name, split, tokenization=False, return_raw_dataset=False):
 
         return TokenizedComponents(all_answers_tokenized, all_context_tokenized, all_titles_tokenized)
 
-ds = get_data("squad", "train", tokenization=True)
-print(ds.tokenized_answers[0])
+
