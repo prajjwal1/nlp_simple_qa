@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from datasets import load_dataset
+import spacy
 from spacy.lang.en import English
 from tqdm import tqdm
 from typing import List
@@ -41,3 +42,8 @@ def get_data(dataset_name, split, tokenization=False, return_raw_dataset=False):
         return dataset
 
 
+def Lemmatizer(sentence):
+    nlp = spacy.load('en_core_web_trf', disable = ['parser', 'tagger', 'ner'])
+    doc = nlp(sentence)
+    lemmatized_tokens = [token.lemma_ for token in doc]
+    return lemmatized_tokens
