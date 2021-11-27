@@ -1,2 +1,2 @@
-datasets
-spacy
+torch
+sentence_transformers
