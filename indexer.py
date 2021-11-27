@@ -1,20 +1,23 @@
 import pysolr
+import os
+
+LOC_ARTICLES = 'articles/'             # Where Articles are Stored to be Indexed
+
 
 # Create a client instance. The timeout and authentication options are not required.
 solr = pysolr.Solr('http://localhost:8983/solr/', always_commit=True)
 
-# Indexing the Data
-solr.add([
-    {
-        "id": "doc_1",
-        "title": "A test document",
-    },
-    {
-        "id": "doc_2",
-        "title": "The Banana: Tasty or Dangerous?",
-        "_doc": [
-            { "id": "child_doc_1", "title": "peel" },
-            { "id": "child_doc_2", "title": "seed" },
-        ]
-    },
-])
+entries = []
+for filename in os.listdir(LOC_ARTICLES):
+  entry = {}
+  entry['title'] = filename.split('.')[0]
+  with open(f'{LOC_ARTICLES}/{filename}') as f:
+    entry['text']= f.readlines()
+  entries.append(entry)
+
+
+# Indexing the Entries
+solr.add(entries)
+
+# How To Search
+# results = solr.search('bananas')
