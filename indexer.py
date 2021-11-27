@@ -3,10 +3,10 @@ import os
 
 LOC_ARTICLES = 'articles/'             # Where Articles are Stored to be Indexed
 
-
-# Create a client instance. The timeout and authentication options are not required.
+# Create a Client Instance
 solr = pysolr.Solr('http://localhost:8983/solr/', always_commit=True)
 
+# Load File Title & Text from Articles Folder into Entries List
 entries = []
 for filename in os.listdir(LOC_ARTICLES):
   entry = {}
@@ -15,9 +15,8 @@ for filename in os.listdir(LOC_ARTICLES):
     entry['text']= f.readlines()
   entries.append(entry)
 
-
-# Indexing the Entries
+# Add Entries List to the Indexer
 solr.add(entries)
 
-# How To Search
+# Search with Solr
 # results = solr.search('bananas')
