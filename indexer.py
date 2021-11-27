@@ -4,7 +4,7 @@ import os
 LOC_ARTICLES = 'articles/'             # Where Articles are Stored to be Indexed
 
 # Create a Client Instance
-solr = pysolr.Solr('http://localhost:8983/solr/', always_commit=True)
+solr = pysolr.Solr('http://localhost:8983/solr/', always_commit=True, timeout=10)
 
 # Load File Title & Text from Articles Folder into Entries List
 entries = []
