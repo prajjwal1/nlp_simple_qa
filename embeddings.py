@@ -9,6 +9,7 @@ from dataset_utils import get_data_from_articles
 DATA_PATH = "data/articles"
 
 def get_model():
+    device = "cuda" if torch.cuda.is_available() else "cpu"
     model = SentenceTransformer("all-MiniLM-L6-v2")
     return model
 
@@ -25,7 +26,7 @@ def compute_embedding_list_sentence(model, list_sentences):
     return list_sentences_embedding
 
 
-def get_scores(query, article_ids):
+def get_best_sentence(query, article_ids):
     all_sentences_dict = get_list_sentences(article_ids)
 
     model = get_model()
@@ -47,8 +48,6 @@ def get_scores(query, article_ids):
             best_score = max_score
             best_sentence = all_sentences_dict[article_id][sentence_id]
     return best_sentence
-
-print(get_scores("What was the capital of Safavid Dynasty", [400, 390]))
 
 
 
