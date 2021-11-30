@@ -20,6 +20,6 @@ def get_accuracy(data_dict):
         print(f"Accuracy on {qa_index}: {acc}")
     print('Overall Accuracy: ', acc)
 
-if __name__ == 'main':
+if __name__ == '__main__':
     sample_data_dict = get_data_from_sample(SAMPLE_DATA_PATH)
     get_accuracy(sample_data_dict)
