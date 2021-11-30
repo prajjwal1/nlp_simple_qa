@@ -4,7 +4,6 @@ from dataset_utils import get_data_from_sample
 
 SAMPLE_DATA_PATH = "data/qa_data.txt"
 
-
 def get_accuracy(data_dict):
     """
     `data_dict` is of the following type
@@ -17,8 +16,10 @@ def get_accuracy(data_dict):
             if answer in response:
                 correct += 1
             count += 1
-    return 'Accuracy: {correct/count}'
+        acc = (correct/count)*100
+        print(f"Accuracy on {qa_index}: {acc}")
+    print('Overall Accuracy: ', acc)
 
-sample_data_dict = get_data_from_sample(SAMPLE_DATA_PATH)
-print(get_accuracy(sample_data_dict))
-
+if __name__ == 'main':
+    sample_data_dict = get_data_from_sample(SAMPLE_DATA_PATH)
+    get_accuracy(sample_data_dict)
