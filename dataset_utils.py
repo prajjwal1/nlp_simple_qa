@@ -40,4 +40,3 @@ def get_data_from_sample(path: str) -> Dict:
                 answers.append(clean_answer.strip())
         qa_dict[qa_index] = {'questions': questions, 'answers': answers}
     return qa_dict
-
