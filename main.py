@@ -1,6 +1,6 @@
 from tqdm import tqdm
 from embeddings import get_best_sentence
-from dataset_utils import get_data_from_sample
+from dataset_utils import get_data_from_sample, expand_query
 
 SAMPLE_DATA_PATH = "data/qa_data.txt"
 
@@ -21,5 +21,7 @@ def get_accuracy(data_dict):
     print('Overall Accuracy: ', acc)
 
 if __name__ == '__main__':
+    # Example of how to expand query
+    # print(expand_query('Giant Wholesome Penguins Attack Tigers on the Antarctic Ice Shelf'))
     sample_data_dict = get_data_from_sample(SAMPLE_DATA_PATH)
     get_accuracy(sample_data_dict)
