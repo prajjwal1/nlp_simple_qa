@@ -43,7 +43,7 @@ def get_data_from_sample(path: str) -> Dict:
         qa_dict[qa_index] = {'questions': questions, 'answers': answers}
     return qa_dict
 
-def get_synonyms(word: str, pns = False, max: int = 3):
+def get_synonyms(word: str, pns: bool = False, max: int = 3):
     '''Returns a set of synonyms for a word
     @param word - Lowercase word to get synonyms for
     @param pns - True/False to include proper nouns (EX: panther -> Black Panthers)
