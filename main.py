@@ -13,6 +13,8 @@ def get_accuracy(data_dict):
         correct, count = 0, 0
         for question, answer in tqdm(zip(qa_dict['questions'], qa_dict['answers'])):
             response = get_best_sentence(question, [qa_index])
+            print('Question: ', question, 'Response: ', response, 'Answer: ', answer)
+            print()
             if answer in response:
                 correct += 1
             count += 1
