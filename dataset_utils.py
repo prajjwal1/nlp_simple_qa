@@ -44,7 +44,7 @@ def get_data_from_sample(path: str) -> Dict:
     return qa_dict
 
 def get_synonyms(word: str, pns = False, max: int = 3):
-    '''Gets synonyms for a word
+    '''Returns a set of synonyms for a word
     @param word - Lowercase word to get synonyms for
     @param pns - True/False to include proper nouns (EX: panther -> Black Panthers)
     @param max - Maximum number of synonyms to return'''
@@ -53,7 +53,7 @@ def get_synonyms(word: str, pns = False, max: int = 3):
     return set([w.name().replace("_", " ") for s in wn.synsets(word) for w in s.lemmas() if word != w.name() and w.name() == w.name().lower()][0:max])
 
 def expand_query(query: str):
-    '''Expands a query to include synonyms for non stop words'''
+    '''Returns an expanded query with synonyms for all non-stopwords'''
     STOPWORDS = set(stopwords.words('english'))
     new_query = ''
     for word in query.split():
