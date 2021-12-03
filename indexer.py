@@ -1,22 +1,29 @@
 import pysolr
 import os
 
-LOC_ARTICLES = 'data/articles/'             # Where Articles are Stored to be Indexed
+LOC_ARTICLES = 'data/articles/'   # Where Articles to be Indexed are Stored
 
 # Create a Client Instance
-solr = pysolr.Solr('http://localhost:8983/solr/', always_commit=True, timeout=10)
+solr = pysolr.Solr('http://localhost:8983/solr/gettingstarted', always_commit=True, timeout=10)
 
-# Load File Title & Text from Articles Folder into Entries List
-entries = []
-for filename in os.listdir(LOC_ARTICLES):
-  print(filename)
-  entry = { "id": filename.split('.')[0] }
-  with open(f'{LOC_ARTICLES}/{filename}', 'r', encoding="utf8") as f:
-    entry['text'] = f.readlines()
-  entries.append(entry)
+def index_articles():
+  '''Ping Server to Check if it is Alive'''
+  solr.ping()
 
-# Add Entries List to the Indexer
-solr.add(entries)
+def index_articles():
+  '''Load File Id (Title) & Text from Articles Folder into Entries List'''
+  entries = []
+  for filename in os.listdir(LOC_ARTICLES):
+    entry = { "id": filename.split('.')[0] }
+    with open(f'{LOC_ARTICLES}/{filename}', 'r', encoding="utf8") as f:
+      entry['text'] = f.read().strip()
+    entries.append(entry)
+  solr.add(entries)               # Add Entries List to the Indexer
 
-# Search with Solr
-# results = solr.search('bananas')
+def search(query: str):
+  '''Search for a String Query in the Index
+  Returns a List of Documents that match the Query'''
+  return [x['id'] for x in solr.search(f'text:{query}').docs]
+
+# Example Usage of Search function
+print(search('Hoover')) #TODO: Remove this
