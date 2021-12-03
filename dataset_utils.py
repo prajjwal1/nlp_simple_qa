@@ -7,7 +7,7 @@ from typing import List, Dict
 
 
 def get_data_from_articles(path: str) -> List:
-    with open(path, "r") as f:
+    with open(path, "r", encoding="utf8") as f:
         data = f.read()
     data = data.split(".")
     return data
@@ -16,7 +16,7 @@ def get_data_from_sample(path: str) -> Dict:
     REPLACEMENTS =  [("(", ""), (")", ""),
                      ("[", ""), ("]", ""),
                      ("'", ""), ("\"", "")]
-    with open(path, "r") as f:
+    with open(path, "r", encoding="utf8") as f:
         data = f.read()
     data = data.split("\n")
     examples = []
