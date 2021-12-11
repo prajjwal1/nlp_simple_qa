@@ -30,12 +30,12 @@ def get_best_sentence(query, article_ids):
     all_sentences_dict = get_list_sentences(article_ids)
 
     model = get_model()
-    original_query_embedding = model.encode(query)
+    original_query_embedding = model.encode(query, convert_to_tensor=True)
     candidate_sentences_data = {}
 
     for article_id, article_id_sentences in all_sentences_dict.items():
-        query_embedding = torch.tensor(np.array([len(article_id_sentences)*[original_query_embedding]]))
-        query_embedding = query_embedding.squeeze(0)
+        query_embedding = original_query_embedding.repeat(len(article_id_sentences), -1)
+        print(query_embedding.size())
 
         article_id_embedding = compute_embedding_list_sentence(model, article_id_sentences)
         article_id_cosine_score = util.pytorch_cos_sim(query_embedding, article_id_embedding)
