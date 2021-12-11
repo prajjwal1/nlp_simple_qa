@@ -6,6 +6,10 @@ __pycache__/
 # C extensions
 *.so
 
+solr-8.11.0/
+data/index/
+data/tlog/
+
 # Distribution / packaging
 .Python
 build/

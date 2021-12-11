@@ -12,6 +12,25 @@ def get_data_from_articles(path: str) -> List:
     data = data.split(".")
     return data
 
+import collections
+import pickle
+import os
+
+hashmap = collections.defaultdict(int)
+article_ids = os.listdir("data/articles")
+all_text = ''
+
+for article_id in article_ids:
+    all_text += ''.join( get_data_from_articles("data/articles/"+article_id))
+
+for token in all_text.split(' '):
+    hashmap[token.lower()] += 1
+
+with open("dict.pkl", "wb") as f:
+    pickle.dump(hashmap, f)
+
+
+
 def get_data_from_sample(path: str) -> Dict:
     REPLACEMENTS =  [("(", ""), (")", ""),
                      ("[", ""), ("]", ""),

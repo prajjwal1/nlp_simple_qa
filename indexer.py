@@ -6,7 +6,7 @@ LOC_ARTICLES = 'data/articles/'   # Where Articles to be Indexed are Stored
 # Create a Client Instance
 solr = pysolr.Solr('http://localhost:8983/solr/gettingstarted', always_commit=True, timeout=10)
 
-def index_articles():
+def ping_server():
   '''Ping Server to Check if it is Alive'''
   solr.ping()
 
@@ -25,5 +25,3 @@ def search(query: str):
   Returns a List of Documents that match the Query'''
   return [x['id'] for x in solr.search(f'text:{query}').docs]
 
-# Example Usage of Search function
-print(search('Hoover')) #TODO: Remove this
