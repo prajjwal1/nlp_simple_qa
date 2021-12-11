@@ -1,26 +1,29 @@
 import os
 import sys
+from typing import List
 
 import numpy as np
 import torch
 from sentence_transformers import SentenceTransformer, util
 
-from dataset_utils import get_data_from_articles
-
 DATA_PATH = "data/articles"
 
-def get_model():
+def get_model() -> SentenceTransformer:
     device = "cuda" if torch.cuda.is_available() else "cpu"
     model = SentenceTransformer("all-MiniLM-L6-v2", device=device)
     return model
 
+def get_data_from_articles(path: str) -> List:
+    with open(path, "r", encoding="utf8") as f:
+        data = f.read()
+    data = data.split(".")
+    return data
 
 def get_list_sentences(article_ids):
     all_data = {}
     for article_id in article_ids:
         all_data[article_id] = get_data_from_articles(os.path.join(DATA_PATH, str(article_id))+'.txt')
     return all_data
-
 
 def compute_embedding_list_sentence(model, list_sentences):
     list_sentences_embedding = model.encode(list_sentences, convert_to_tensor=True)

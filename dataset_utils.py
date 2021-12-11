@@ -1,35 +1,26 @@
-import sys
-from dataclasses import dataclass
+import collections
+import pickle
+import os
+import pandas as pd
 from tqdm import tqdm
 from nltk.corpus import stopwords
 from nltk.corpus import wordnet as wn
 from typing import List, Dict
+from embeddings import get_best_sentence, get_data_from_articles
 
+def create_stats_dict():
+    hashmap = collections.defaultdict(int)
+    article_ids = os.listdir("data/articles")
+    all_text = ''
 
-def get_data_from_articles(path: str) -> List:
-    with open(path, "r", encoding="utf8") as f:
-        data = f.read()
-    data = data.split(".")
-    return data
+    for article_id in article_ids:
+        all_text += ''.join( get_data_from_articles("data/articles/"+article_id))
 
-import collections
-import pickle
-import os
+    for token in all_text.split(' '):
+        hashmap[token.lower()] += 1
 
-hashmap = collections.defaultdict(int)
-article_ids = os.listdir("data/articles")
-all_text = ''
-
-for article_id in article_ids:
-    all_text += ''.join( get_data_from_articles("data/articles/"+article_id))
-
-for token in all_text.split(' '):
-    hashmap[token.lower()] += 1
-
-with open("dict.pkl", "wb") as f:
-    pickle.dump(hashmap, f)
-
-
+    with open("dict.pkl", "wb") as f:
+        pickle.dump(hashmap, f)
 
 def get_data_from_sample(path: str) -> Dict:
     REPLACEMENTS =  [("(", ""), (")", ""),
@@ -81,3 +72,30 @@ def expand_query(query: str):
             for synonym in get_synonyms(word.lower()):
                 new_query += " " + synonym
     return new_query.strip()
+
+def get_accuracy(data_dict):
+    """
+    `data_dict` is of the following type
+        {'qa_idx': {'questions': List[questions], 'answers': List[answers]}}
+    """
+    for qa_index, qa_dict in tqdm(data_dict.items()):
+        correct, count = 0, 0
+        for question, answer in tqdm(zip(qa_dict['questions'], qa_dict['answers'])):
+            response = get_best_sentence(question, [qa_index])
+            if answer in response:
+                correct += 1
+            else:
+                print('ID: ', qa_index, 'Question: ', question, 'Response: ', response, 'Answer: ', answer)
+                print()
+            count += 1
+        acc = (correct/count)*100
+        print(f"Accuracy on {qa_index}: {acc}")
+    print('Overall Accuracy: ', acc)
+
+def sample_check(PATH):
+    df = pd.read_excel(PATH)
+    questions, answers = list(df.question), list(df.answer_sentence)
+    answers = list(map(str, answers))
+    return questions, answers
+
+sample_check("data/sample_check/sample.xlsx")
