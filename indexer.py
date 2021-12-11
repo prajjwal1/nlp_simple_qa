@@ -24,4 +24,3 @@ def search(query: str):
   '''Search for a String Query in the Index
   Returns a List of Documents that match the Query'''
   return [x['id'] for x in solr.search(f'text:{query}').docs]
-
