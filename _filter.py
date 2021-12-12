@@ -1,9 +1,11 @@
 import pickle
+import re
 
 def filter_query(query):
     words_to_remove = ["how", "when", "what", "was", "the", "of", "the", "\""]
-    chars_to_remove = ['"', '?', '.']
+    chars_to_remove = ['"', '?', '.', "‟", "„", "“", "’", "“", "”"]
     query = ' '.join([x for x in query.split() if x not in words_to_remove])
+    s = re.sub(r'\W+', '', query)
     for char in chars_to_remove:
         query = query.replace(char, "")
     return query
