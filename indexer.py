@@ -25,6 +25,6 @@ def search(query: str, highlight: bool = False):
   highlight=T: {docId : {'text': ["sentence1", "sentence2"] } } }
   highlight=F: [docId1, docId2, ...]'''
   if highlight:
-    return solr.search(f'text:Hoover', **{'hl': 'true', 'hl.method': 'unified', 'hl.fl': 'text',
+    return solr.search(f'text:{query}', **{'hl': 'true', 'hl.method': 'unified', 'hl.fl': 'text',
       'hl.maxAnalyzedChars': 1000000, 'hl.snippets': 1000, 'hl.simple.pre': '', 'hl.simple.post': ''}).highlighting
   return [x['id'] for x in solr.search(f'text:{query}').docs]
