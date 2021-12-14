@@ -20,7 +20,11 @@ def index_articles():
     entries.append(entry)
   solr.add(entries)               # Add Entries List to the Indexer
 
-def search(query: str):
-  '''Search for a String Query in the Index
-  Returns a List of Documents that match the Query'''
+def search(query: str, highlight: bool = False):
+  '''Search for a String Query in the Index, Returns:
+  highlight=T: {docId : {'text': ["sentence1", "sentence2"] } } }
+  highlight=F: [docId1, docId2, ...]'''
+  if highlight:
+    return solr.search(f'text:Hoover', **{'hl': 'true', 'hl.method': 'unified', 'hl.fl': 'text',
+      'hl.maxAnalyzedChars': 1000000, 'hl.snippets': 1000, 'hl.simple.pre': '', 'hl.simple.post': ''}).highlighting
   return [x['id'] for x in solr.search(f'text:{query}').docs]

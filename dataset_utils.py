@@ -5,7 +5,7 @@ import pandas as pd
 from tqdm import tqdm
 from nltk.corpus import stopwords
 from nltk.corpus import wordnet as wn
-from typing import List, Dict
+from typing import Dict
 from embeddings import get_best_sentence, get_data_from_articles
 
 def create_stats_dict():
