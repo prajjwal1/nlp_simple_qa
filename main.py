@@ -102,7 +102,7 @@ def inference_test(FILE_PATH):
                 question, retrieved_article_id
             )
             question = question.replace("\n", "")
-            val_str = f"{question}, '{best_article_id}', '{best_sentence}'"
+            val_str = f"{question}; '{best_article_id}'; '{best_sentence}'"
             file2.write(val_str + "\n")
         except:
             print("E")
