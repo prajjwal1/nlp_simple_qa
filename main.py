@@ -46,9 +46,7 @@ def run_inference_sample():
             "\nComplexity: ",
             sample_comp_level,
         )
-        print(
-            "=================================================================================="
-        )
+        print("==================================================================================")
 
         if str(sample_answer) in response:
             correct += 1
@@ -99,9 +97,7 @@ def inference_test(FILE_PATH):
     for question in tqdm(questions):
         filtered_query = filter_query_retrieval(str(question))
         retrieved_article_id = search(filtered_query)
-        best_sentence, best_article_id = get_best_sentence(
-            question, retrieved_article_id
-        )
+        best_sentence, best_article_id = get_best_sentence(question, retrieved_article_id)
         question = question.replace("\n", "")
         val_str = f"{question}, '{best_article_id}', '{best_sentence}'"
         file2.write(val_str + "\n")
@@ -137,9 +133,7 @@ def run_task_1():
         print(f"Question #{i}:", question)
         question_filtered = remove_stopwords(question)
         print("POS Tagged:", get_pos_tags(question))
-        print(
-            "Dependency Parsed:", get_dependencies(question)
-        )  # TODO: Finishg Dependency Parsing with Spacy
+        print("Dependency Parsed:", get_dependencies(question))
         print("Word Filter:", question_filtered)
         print("Lemmatized:", get_lemmas(question_filtered))
         print("Hypernyms:", get_wordnet_features(question_filtered, "hypernyms"))
