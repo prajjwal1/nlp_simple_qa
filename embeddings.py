@@ -31,8 +31,9 @@ def get_best_sentence(query, article_ids):
     model = get_model()
     original_query_embedding = model.encode(query, convert_to_tensor=True)
     candidate_sentences_scores, candidate_sentences = [], []
+    all_article_ids = []
 
-    for _, article_id_sentences in all_sentences_dict.items():
+    for article_id, article_id_sentences in all_sentences_dict.items():
         input_sentences = [query]
         input_sentences.extend(article_id_sentences)
 
@@ -42,8 +43,10 @@ def get_best_sentence(query, article_ids):
         cos_scores = util.semantic_search(query_embedding, corpus_embedding, top_k=1)
         candidate_sentences_scores.append(cos_scores[0][0]['score'])
         candidate_sentences.append(article_id_sentences[cos_scores[0][0]['corpus_id']])
+        all_article_ids.append(article_id)
 
-    return candidate_sentences[np.argmax(candidate_sentences_scores)]
+    best_idx = np.argmax(candidate_sentences_scores)
+    return candidate_sentences[best_idx], all_article_ids[best_idx]
 
     # #Paraphrase mining
     # paraphrases = util.paraphrase_mining(model, input_sentences, batch_size=128)

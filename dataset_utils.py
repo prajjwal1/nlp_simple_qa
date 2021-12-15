@@ -109,8 +109,9 @@ def get_accuracy(data_dict):
 
 def sample_check(PATH):
     df = pd.read_excel(PATH)
-    questions, answers = list(df.question), list(df.answer_sentence)
+    questions, answers, complexity_levels = list(df.question), list(df.answer_sentence), list(df.complex_level)
     answers = list(map(str, answers))
-    return questions, answers
+    complexity_levels = list(map(int, complexity_levels))
+    return questions, answers, complexity_levels
 
 sample_check("data/sample_check/sample.xlsx")

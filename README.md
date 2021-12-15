@@ -23,7 +23,17 @@ For installation instructions, head over to [solr.apache.org](https://solr.apach
 
 ## Use
 To run the program on sample data and compute accuracy, run
+For task 1
 ```
-$ python3 main.py
+$ python3 main.py --task_id 1
 ```
-All the main functionality resides in `main.py`.
+For task 2
+```
+$ python3 main.py --task_id 2
+```
+It will print out all the statistics
+
+For task 3
+```
+$ python3 main.py --task_id 3 --file_path sample_test.txt
+```
