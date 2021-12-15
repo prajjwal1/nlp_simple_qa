@@ -3,8 +3,7 @@ import pickle
 import os
 import pandas as pd
 from tqdm import tqdm
-from nltk.corpus import stopwords
-from nltk.corpus import wordnet as wn
+from nltk.corpus import stopwords, wordnet as wn
 from typing import Dict
 from embeddings import get_best_sentence, get_data_from_articles
 

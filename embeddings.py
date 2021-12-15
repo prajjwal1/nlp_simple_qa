@@ -1,7 +1,5 @@
 import os
-import sys
 from typing import List
-
 import numpy as np
 import torch
 from sentence_transformers import SentenceTransformer, util
@@ -9,15 +7,12 @@ from sentence_transformers import SentenceTransformer, util
 DATA_PATH = "data/articles"
 
 def get_model() -> SentenceTransformer:
-    device = "cuda" if torch.cuda.is_available() else "cpu"
-    model = SentenceTransformer("all-MiniLM-L6-v2", device=device)
-    return model
+    return SentenceTransformer("all-MiniLM-L6-v2", device="cuda" if torch.cuda.is_available() else "cpu")
 
 def get_data_from_articles(path: str) -> List:
     with open(path, "r", encoding="utf8") as f:
         data = f.read()
-    data = data.split(".")
-    return data
+    return data.split(".")
 
 def get_list_sentences(article_ids):
     all_data = {}
@@ -26,9 +21,7 @@ def get_list_sentences(article_ids):
     return all_data
 
 def compute_embedding_list_sentence(model, list_sentences):
-    list_sentences_embedding = model.encode(list_sentences, convert_to_tensor=True)
-    return list_sentences_embedding
-
+    return model.encode(list_sentences, convert_to_tensor=True)
 
 def get_best_sentence(query, article_ids):
     all_sentences_dict = get_list_sentences(article_ids)
@@ -39,7 +32,7 @@ def get_best_sentence(query, article_ids):
     original_query_embedding = model.encode(query, convert_to_tensor=True)
     candidate_sentences_scores, candidate_sentences = [], []
 
-    for article_id, article_id_sentences in all_sentences_dict.items():
+    for _, article_id_sentences in all_sentences_dict.items():
         input_sentences = [query]
         input_sentences.extend(article_id_sentences)
 
@@ -52,35 +45,28 @@ def get_best_sentence(query, article_ids):
 
     return candidate_sentences[np.argmax(candidate_sentences_scores)]
 
-        #### Paraphrase mining
-#          paraphrases = util.paraphrase_mining(model, input_sentences, batch_size=128)
+    # #Paraphrase mining
+    # paraphrases = util.paraphrase_mining(model, input_sentences, batch_size=128)
+    # best_sentence, best_score = [], []
+    # for score, sentence_i, sentence_j in paraphrases:
+    #     if (sentence_i == 0):
+    #         best_sentence.append(article_id_sentences[sentence_j-1])
+    #         best_score.append(score)
+    #     elif sentence_j == 0:
+    #         best_sentence.append(article_id_sentences[sentence_i-1])
+    #         best_score.append(score)
+    # return best_sentence[np.argmax(best_score)]
 
-        #  best_sentence, best_score = [], []
-        #  for score, sentence_i, sentence_j in paraphrases:
-            #  if (sentence_i == 0):
-                #  best_sentence.append(article_id_sentences[sentence_j-1])
-                #  best_score.append(score)
-            #  elif sentence_j == 0:
-                #  best_sentence.append(article_id_sentences[sentence_i-1])
-                #  best_score.append(score)
-    #  return best_sentence[np.argmax(best_score)]
+    # #Vanilla Cosine similarity
+    #  query_embedding = original_query_embedding.repeat(len(article_id_sentences), 1)
+    #  article_id_embedding = compute_embedding_list_sentence(model, article_id_sentences)
+    #  article_id_cosine_score = util.pytorch_cos_sim(query_embedding, article_id_embedding)
+    #  candidate_sentences_data[article_id] = torch.max(article_id_cosine_score[0], dim=0)
 
-        # Vanilla Cosine similarity
-
-        #  query_embedding = original_query_embedding.repeat(len(article_id_sentences), 1)
-
-        #  article_id_embedding = compute_embedding_list_sentence(model, article_id_sentences)
-
-        #  article_id_cosine_score = util.pytorch_cos_sim(query_embedding, article_id_embedding)
-        #  candidate_sentences_data[article_id] = torch.max(article_id_cosine_score[0], dim=0)
-
-#      best_score = 0
-    #  best_sentence = ""
-    #  for article_id, (max_score, sentence_id) in candidate_sentences_data.items():
-        #  if max_score > best_score:
-            #  best_score = max_score
-            #  best_sentence = all_sentences_dict[article_id][sentence_id]
-    #  return best_sentence
-
-
-
+    # #best_score = 0
+    # best_sentence = ""
+    # for article_id, (max_score, sentence_id) in candidate_sentences_data.items():
+    #     if max_score > best_score:
+    #         best_score = max_score
+    #         best_sentence = all_sentences_dict[article_id][sentence_id]
+    # return best_sentence

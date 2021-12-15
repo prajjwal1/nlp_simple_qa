@@ -1,6 +1,5 @@
 from tqdm import tqdm
 from indexer import search
-import pickle
 from dataset_utils import get_accuracy, get_data_from_sample, sample_check
 from embeddings import get_best_sentence
 from _filter import filter_query_retrieval, filter_query
