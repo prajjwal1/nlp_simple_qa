@@ -97,14 +97,17 @@ def inference_test(FILE_PATH):
     file2 = open("output.csv", "w")
     questions = file1.readlines()
     for question in tqdm(questions):
-        filtered_query = filter_query_retrieval(str(question))
-        retrieved_article_id = search(filtered_query)
-        best_sentence, best_article_id = get_best_sentence(
-            question, retrieved_article_id
-        )
-        question = question.replace("\n", "")
-        val_str = f"{question}, '{best_article_id}', '{best_sentence}'"
-        file2.write(val_str + "\n")
+        try:
+            filtered_query = filter_query_retrieval(str(question))
+            retrieved_article_id = search(filtered_query)
+            best_sentence, best_article_id = get_best_sentence(
+                question, retrieved_article_id
+            )
+            question = question.replace("\n", "")
+            val_str = f"{question}, '{best_article_id}', '{best_sentence}'"
+            file2.write(val_str + "\n")
+        except:
+            print("E")
     file2.close()
     print("output.csv file created successfully")
 
