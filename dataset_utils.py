@@ -3,7 +3,9 @@ import pickle
 import os
 import pandas as pd
 from tqdm import tqdm
+from nltk import pos_tag
 from nltk.corpus import stopwords, wordnet as wn
+from nltk.stem import WordNetLemmatizer
 from typing import Dict
 from embeddings import get_best_sentence, get_data_from_articles
 
@@ -52,6 +54,22 @@ def get_data_from_sample(path: str) -> Dict:
         qa_dict[qa_index] = {'questions': questions, 'answers': answers}
     return qa_dict
 
+def remove_stopwords(sentence: str):
+    return ' '.join(word for word in sentence.split() if word.lower() not in stopwords.words('english'))
+
+def get_pos_tags(sentence: str):
+    sentence_tagged = ""
+    for tag in pos_tag(sentence.split()):
+        sentence_tagged += f'{tag[0]}_{tag[1]} '
+    return sentence_tagged
+
+def get_lemmas(words: str):
+    lemmatizer = WordNetLemmatizer()
+    lemmas = ""
+    for word in words.split():
+        lemmas += " " + lemmatizer.lemmatize(word)
+    return lemmas.strip()
+
 def get_synonyms(word: str, pns: bool = False, max: int = 3):
     '''Returns a set of synonyms for a word
     @param word - Lowercase word to get synonyms for
@@ -63,13 +81,11 @@ def get_synonyms(word: str, pns: bool = False, max: int = 3):
 
 def expand_query(query: str):
     '''Returns an expanded query with synonyms for all non-stopwords'''
-    STOPWORDS = set(stopwords.words('english'))
     new_query = ''
-    for word in query.split():
+    for word in remove_stopwords(query).split():
         new_query += " " + word
-        if word.lower() not in STOPWORDS:
-            for synonym in get_synonyms(word.lower()):
-                new_query += " " + synonym
+        for synonym in get_synonyms(word.lower()):
+            new_query += " " + synonym
     return new_query.strip()
 
 def get_accuracy(data_dict):
