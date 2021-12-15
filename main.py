@@ -13,8 +13,10 @@ if __name__ == '__main__':
     correct = 0
     for sample_question, sample_answer in tqdm(zip(questions, answers)):
         filtered_query = filter_query_retrieval(sample_question)
-        retrieved_article_id = search(filtered_query)
-        response = filter_query(get_best_sentence(sample_question, retrieved_article_id))
+        # retrieved_article_text = search(filtered_query, highlight=True)
+        # response = filter_query(get_best_sentence(sample_question, retrieved_article_text))
+        retrieved_article_ids = search(filtered_query)
+        response = filter_query(get_best_sentence(sample_question, retrieved_article_ids))
         sample_answer = filter_query(sample_answer)
 
         if str(sample_answer) in response:

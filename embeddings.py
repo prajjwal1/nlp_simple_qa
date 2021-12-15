@@ -32,6 +32,8 @@ def compute_embedding_list_sentence(model, list_sentences):
 
 def get_best_sentence(query, article_ids):
     all_sentences_dict = get_list_sentences(article_ids)
+    # all_sentences_dict = get_list_sentences([k for k, v in article_text.items()]) # Whole Doc
+    # all_sentences_dict = {k: v['text'] for k, v in article_text.items()} # Search Highlighted Sentences
 
     model = get_model()
     original_query_embedding = model.encode(query, convert_to_tensor=True)
