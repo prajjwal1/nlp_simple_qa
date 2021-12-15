@@ -2,12 +2,13 @@ from tqdm import tqdm
 from indexer import search
 from dataset_utils import get_accuracy, get_data_from_sample, sample_check
 from embeddings import get_best_sentence
+import fire
 from _filter import filter_query_retrieval, filter_query
 
 SAMPLE_DATA_PATH = "data/qa_data.txt"
 SAMPLE_DATA_VALIDATION = "data/sample_check/sample.xlsx"
 
-if __name__ == '__main__':
+def run_inference_sample():
     questions, answers = sample_check(SAMPLE_DATA_VALIDATION)
     correct = 0
     for sample_question, sample_answer in tqdm(zip(questions, answers)):
@@ -23,6 +24,15 @@ if __name__ == '__main__':
         else:
             print('\nResponse: ', response, '\nGround Truth: ', sample_answer, "\n")
     print('Accuracy: ', correct/len(questions))
+
+def run_task(task_id):
+    if task_id == 2:
+        run_inference_sample()
+
+
+if __name__ == '__main__':
+    fire.Fire(run_task)
+
 
         #  print('Response: ', response, 'Ground Truth: ', sample_answer)
 

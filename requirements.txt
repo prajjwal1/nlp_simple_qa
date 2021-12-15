@@ -1,3 +1,4 @@
 tqdm
 sentence_transformers
 pysolr
+fire
