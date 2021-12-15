@@ -1,6 +1,7 @@
 import collections
 import pickle
 import os
+# import spacy #TODO: Finish dependency parsing with spacy
 import pandas as pd
 from tqdm import tqdm
 from nltk import pos_tag
@@ -70,6 +71,30 @@ def get_lemmas(words: str):
         lemmas += " " + lemmatizer.lemmatize(word)
     return lemmas.strip()
 
+def get_dependencies(sentence: str):
+    nlp = spacy.load('en_core_web_sm') # TODO: Finish dependency parsing with spacy
+    doc = nlp(sentence)
+    return ''.join([token.morph for token in doc])
+
+def get_wordnet_features(sentence: str, nym_type: str):
+    new_query = ''
+    for word in remove_stopwords(sentence).split():
+        word = word.lower()
+        new_query += " " + word
+        if (nym_type == 'hypernyms'):
+            for nym in [w.name().replace("_", " ") for s in wn.synsets(word) for w in s.hypernyms() if word != w.name()]:
+                new_query += " " + nym
+        elif (nym_type == 'hyponyms'):
+            for nym in [w.name().replace("_", " ") for s in wn.synsets(word) for w in s.hyponyms() if word != w.name()]:
+                new_query += " " + nym
+        elif (nym_type == 'meronyms'):
+            for nym in [w.name().replace("_", " ") for s in wn.synsets(word) for w in s.part_meronyms() if word != w.name()]:
+                new_query += " " + nym
+        elif (nym_type == 'holonyms'):
+            for nym in [w.name().replace("_", " ") for s in wn.synsets(word) for w in s.part_holonyms() if word != w.name()]:
+                new_query += " " + nym
+    return new_query.strip()
+
 def get_synonyms(word: str, pns: bool = False, max: int = 3):
     '''Returns a set of synonyms for a word
     @param word - Lowercase word to get synonyms for
@@ -79,10 +104,10 @@ def get_synonyms(word: str, pns: bool = False, max: int = 3):
         return set([w.name().replace("_", " ") for s in wn.synsets(word) for w in s.lemmas() if word != w.name()][0:max])
     return set([w.name().replace("_", " ") for s in wn.synsets(word) for w in s.lemmas() if word != w.name() and w.name() == w.name().lower()][0:max])
 
-def expand_query(query: str):
+def expand_query(sentence: str):
     '''Returns an expanded query with synonyms for all non-stopwords'''
     new_query = ''
-    for word in remove_stopwords(query).split():
+    for word in remove_stopwords(sentence).split():
         new_query += " " + word
         for synonym in get_synonyms(word.lower()):
             new_query += " " + synonym

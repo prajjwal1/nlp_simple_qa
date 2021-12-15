@@ -2,8 +2,8 @@ import fire
 from tqdm import tqdm
 
 from _filter import filter_query, filter_query_retrieval
-from dataset_utils import (expand_query, get_accuracy, get_data_from_sample,
-                           get_lemmas, get_pos_tags, remove_stopwords,
+from dataset_utils import (expand_query, get_accuracy, get_data_from_sample, get_dependencies,
+                           get_lemmas, get_pos_tags, get_wordnet_features, remove_stopwords,
                            sample_check)
 from embeddings import get_best_sentence
 from indexer import search
@@ -23,9 +23,7 @@ def run_inference_sample():
         # response = filter_query(get_best_sentence(sample_question, retrieved_article_text))
         retrieved_article_id = search(filtered_query)
         best_sentence, _ =  get_best_sentence(sample_question, retrieved_article_id)
-        response = filter_query(
-            best_sentence
-           )
+        response = filter_query(best_sentence)
         sample_answer = filter_query(sample_answer)
 
         if str(sample_answer) in response:
@@ -61,6 +59,7 @@ def inference_test(FILE_PATH):
 
 
 def run_task_1():
+    questions, _, _ = sample_check(SAMPLE_DATA_VALIDATION)
     questions = [
         q.lower()
         .replace('"', "")
@@ -80,17 +79,21 @@ def run_task_1():
         .replace("\n", "")
         .replace("\t", "")
         .replace("\r", "")
-        for q_list in sample_check(SAMPLE_DATA_VALIDATION)
-        for q in q_list
+        for q in questions
     ]
     i = 1
     for question in questions:
         print(f"Question #{i}:", question)
         question_filtered = remove_stopwords(question)
         print("POS Tagged:", get_pos_tags(question))
+        # print("Dependency Parsed:", get_dependencies(question)) # TODO: Finishg Dependency Parsing with Spacy
         print("Word Filter:", question_filtered)
         print("Lemmatized:", get_lemmas(question_filtered))
-        print("Expanded Query:", expand_query(question_filtered))
+        print("Hypernyms:", get_wordnet_features(question_filtered, 'hypernyms'))
+        print("Hyponyms:", get_wordnet_features(question_filtered, 'hyponyms'))
+        print("Meronyms", get_wordnet_features(question_filtered, 'meronyms'))
+        print("Holonyms", get_wordnet_features(question_filtered, 'holonyms'))
+        print("Synonyms:", expand_query(question_filtered))
         print()
         print("======================================")
         i += 1
