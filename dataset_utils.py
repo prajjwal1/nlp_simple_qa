@@ -1,7 +1,7 @@
 import collections
 import pickle
 import os
-# import spacy #TODO: Finish dependency parsing with spacy
+import spacy #TODO: Finish dependency parsing with spacy
 import pandas as pd
 from tqdm import tqdm
 from nltk import pos_tag
@@ -74,7 +74,11 @@ def get_lemmas(words: str):
 def get_dependencies(sentence: str):
     nlp = spacy.load('en_core_web_sm') # TODO: Finish dependency parsing with spacy
     doc = nlp(sentence)
-    return ''.join([token.morph for token in doc])
+    res = []
+    for token in doc:
+        res.append((token.text, token.dep_, token.head.text, token.head.pos_,
+            [child for child in token.children]))
+    return res
 
 def get_wordnet_features(sentence: str, nym_type: str):
     new_query = ''
@@ -121,6 +125,10 @@ def get_accuracy(data_dict):
         correct, count = 0, 0
         for question, answer in tqdm(zip(qa_dict['questions'], qa_dict['answers'])):
             response = get_best_sentence(question, [qa_index])
+            print('Question: ', question, "\n")
+            print('Answer: ', response, "\n")
+            print('Answer: ', answer, "\n")
+
             if answer in response:
                 correct += 1
             else:
