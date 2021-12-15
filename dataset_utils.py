@@ -79,7 +79,6 @@ def get_dependencies(sentence: str):
 def get_wordnet_features(sentence: str, nym_type: str):
     new_query = ''
     for word in remove_stopwords(sentence).split():
-        word = word.lower()
         new_query += " " + word
         if (nym_type == 'hypernyms'):
             for nym in [w.name().replace("_", " ") for s in wn.synsets(word) for w in s.hypernyms() if word != w.name()]:
