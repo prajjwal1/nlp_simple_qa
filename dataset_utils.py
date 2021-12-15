@@ -1,7 +1,7 @@
 import collections
 import pickle
 import os
-import spacy #TODO: Finish dependency parsing with spacy
+import spacy
 import pandas as pd
 from tqdm import tqdm
 from nltk import pos_tag
@@ -72,7 +72,7 @@ def get_lemmas(words: str):
     return lemmas.strip()
 
 def get_dependencies(sentence: str):
-    nlp = spacy.load('en_core_web_sm') # TODO: Finish dependency parsing with spacy
+    nlp = spacy.load('en_core_web_sm')
     doc = nlp(sentence)
     res = []
     for token in doc:
